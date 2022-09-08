@@ -7,7 +7,8 @@ import sys
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(base_dir)
+print(base_dir)
+sys.path.append(base_dir + '/segmentation_farm/')
 
 import tensorflow as tf 
 from tensorflow.keras.models import Model, load_model
@@ -19,13 +20,13 @@ import imageio
 from glob import glob
 
 from utils.utils import processing_image
-import models.models_val006 as models
+import models
 
 
-path = 'C:/e/CVFARM/model_save/mobileNet_512_e20_b16/e01_val0.101769.h5'
-path = 'C:/e/CVFARM/model_save/mobileNet_117data_256_e20_b8/1406_1800_e01_val0.060554.h5'
+
+path = 'models/models_val006.h5'
 #path = 'C:/e/CVFARM/512_loss_Mobile_net_0306_0.7448450922966003_.h5'
-model = load_model(models, compile = False)
+model = load_model(path, compile = False)
 colormap = np.array([[0,0,0], [255,0,0], [0, 0, 255], [0,255,0],[255,255,255]])
 
 #если бинарник
@@ -52,7 +53,7 @@ def get_overlay(image, colored_mask):
     return overlay
 
 
-path = 'C:/e/CVFARM/dataset/video/cow_eating_united.mp4'
+path = '/Users/vashche/Downloads/cow_eating_united_v2.mp4'
 
 cap = cv2.VideoCapture(path)
 
