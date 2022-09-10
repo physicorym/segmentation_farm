@@ -19,7 +19,7 @@ import cv2
 import imageio
 from glob import glob
 
-from utils.utils import processing_image
+from utils.utils import processing_image, decode_segmentation_masks, get_overlay
 import models
 
 
@@ -33,29 +33,9 @@ colormap = np.array([[0,0,0], [255,0,0], [0, 0, 255], [0,255,0],[255,255,255]])
 #colormap = np.array([[255,255,255], [255,255,255], [0, 0, 255], [0,255,0],[255,255,255]])
 colormap = colormap.astype(np.uint8)
 
-def decode_segmentation_masks(mask, colormap, n_classes):
-    r = np.zeros_like(mask).astype(np.uint8)
-    g = np.zeros_like(mask).astype(np.uint8)
-    b = np.zeros_like(mask).astype(np.uint8)
-    for l in range(0, n_classes):
-        idx = mask == l
-        r[idx] = colormap[l, 0]
-        g[idx] = colormap[l, 1]
-        b[idx] = colormap[l, 2]
-    rgb = np.stack([r, g, b], axis=2)
-    return rgb
+path_video = '/Users/vashche/Downloads/cow_eating_united_v2.mp4' # video
 
-
-def get_overlay(image, colored_mask):
-    image = tf.keras.preprocessing.image.array_to_img(image)
-    image = np.array(image).astype(np.uint8)
-    overlay = cv2.addWeighted(image, 1.0, colored_mask, 1.0, 0.0)
-    return overlay
-
-
-path = '/Users/vashche/Downloads/cow_eating_united_v2.mp4'
-
-cap = cv2.VideoCapture(path)
+cap = cv2.VideoCapture(path_video)
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter('out_video_3.mp4', fourcc, 10.0, (256, 256))

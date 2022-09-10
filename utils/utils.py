@@ -14,3 +14,23 @@ def processing_image(frame, size):
 	img = np.expand_dims(image, axis = 0)
 
 	return img, imag
+
+
+def decode_segmentation_masks(mask, colormap, n_classes):
+    r = np.zeros_like(mask).astype(np.uint8)
+    g = np.zeros_like(mask).astype(np.uint8)
+    b = np.zeros_like(mask).astype(np.uint8)
+    for l in range(0, n_classes):
+        idx = mask == l
+        r[idx] = colormap[l, 0]
+        g[idx] = colormap[l, 1]
+        b[idx] = colormap[l, 2]
+    rgb = np.stack([r, g, b], axis=2)
+    return rgb
+
+
+def get_overlay(image, colored_mask):
+    image = tf.keras.preprocessing.image.array_to_img(image)
+    image = np.array(image).astype(np.uint8)
+    overlay = cv2.addWeighted(image, 1.0, colored_mask, 1.0, 0.0)
+    return overlay
