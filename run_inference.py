@@ -4,6 +4,7 @@ import imageio
 import random
 import os
 import sys
+import yaml
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,30 +23,25 @@ from glob import glob
 from utils.utils import processing_image, decode_segmentation_masks, get_overlay, draw_window
 import models
 
+# подключение конфига
+config_name = 'test.yml'
+CONFIG_INFO = yaml.safe_load(open(f'config/{config_name}', 'rb'))
 
-
-path = 'models/models_val006.h5'
-#path = 'C:/e/CVFARM/512_loss_Mobile_net_0306_0.7448450922966003_.h5'
-model = load_model(path, compile = False)
+# загрузка модели
+model = load_model(CONFIG_INFO['segmantation_model'], compile = False)
 colormap = np.array([[0,0,0], [255,0,0], [0, 0, 255], [0,255,0],[255,255,255]])
 COUNT_WIND = 2
 
 #если бинарник
-#colormap = np.array([[255,255,255], [255,255,255], [0, 0, 255], [0,255,0],[255,255,255]])
 colormap = colormap.astype(np.uint8)
 
-path_video = '/Users/vashche/Downloads/cow_eating_united_v2.mp4' # video
-
-cap = cv2.VideoCapture(path_video)
+cap = cv2.VideoCapture(CONFIG_INFO['source_video'])
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter('out_video_3.mp4', fourcc, 10.0, (256, 256))
 j = 0
 
-# pts1 = np.array([[130,0],[20,40],[40,60],[170,0], [130,0]], np.int32)
-# pts2 = np.array([[130,0],[20,40],[40,60],[170,0], [130,0]], np.int32)
-
-# pts3 = np.array([[5,10],[10,256],[246,10],[10,10]], np.int32)
+# точки для зоны
 pts3 = np.array([[5,10],[5,256],[246,30],[246, 10],[10,10]], np.int32)
 pts4 = np.array([[10,246],[246,10],[246,246],[10,10]], np.int32)
 
@@ -100,7 +96,6 @@ while(cap.isOpened()):
         break
        
 
-   
 
 cap.release()
 out.release()   

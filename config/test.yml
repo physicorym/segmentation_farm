@@ -1,0 +1,4 @@
+source_video: '/Users/vashche/Downloads/cow_eating_united_v2.mp4'
+
+segmantation_model: 'models/models_val006.h5'
+  
