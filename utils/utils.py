@@ -34,3 +34,10 @@ def get_overlay(image, colored_mask):
     image = np.array(image).astype(np.uint8)
     overlay = cv2.addWeighted(image, 1.0, colored_mask, 1.0, 0.0)
     return overlay
+
+
+def draw_window(points, mask):
+
+    mask = cv2.fillPoly(mask, pts=[points], color=(255, 255, 255))
+
+    return mask
